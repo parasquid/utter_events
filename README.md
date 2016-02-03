@@ -1,9 +1,5 @@
 # Utter
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/utter`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -22,7 +18,46 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    require "utter"
+
+    # mixin instance methods
+    class UserRegistration
+      include Utter
+      def register_user(user)
+        # code goes here
+        # ...
+
+        utter(:user_registered, payload: {
+          username: user.name,
+          registration_date: user.created_at
+        })
+      end
+    end
+
+    # mixin class methods
+    class Configuration
+      extend Utter
+
+      def self.user_account_endpoint(subdomain)
+        # code goes here
+        #...
+
+        utter(:user_account_endpoint_called, payload: {
+          subdomain: subdomain
+        })
+      end
+    end
+
+If you'd like to have access to both instance methods and class methods, you can both `include` and `extend` `Utter` like this:
+
+    class IncludeAndExtend
+      include Utter
+      extend Utter
+
+      # now you can use `#utter` in both instance methods and class methods
+    end
+
+Take note however that doing both an `include` and an `extend` may be a sign that your class is doing too much, and may benefit from a refactoring and separation of concerns.
 
 ## Development
 
@@ -32,5 +67,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/utter. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/parasquid/utter. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://github.com/parasquid/utter/blob/master/CODE_OF_CONDUCT.md) code of conduct.
 
