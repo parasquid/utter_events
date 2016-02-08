@@ -1,11 +1,29 @@
 require 'spec_helper'
 
 describe Utter do
-  it 'has a version number' do
-    expect(Utter::VERSION).not_to be nil
+  Given(:version) { Utter::VERSION }
+  Then { version != nil }
+
+  describe "mixin with instance" do
+    class TestClass
+      include Utter
+      def test_utter
+        utter(:test)
+      end
+    end
+    Given(:instance) { TestClass.new }
+    Then { expect { instance.test_utter }.to_not raise_error }
   end
 
-  it 'does something useful' do
-    expect(false).to eq(true)
+  describe "mixin with class" do
+    class TestClass
+      extend Utter
+      def self.test_utter
+        utter(:test)
+      end
+    end
+    Given(:klass) { TestClass }
+    Then { expect { klass.test_utter }.to_not raise_error }
   end
+
 end
