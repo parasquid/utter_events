@@ -18,25 +18,6 @@ Or install it yourself as:
 
 ## Usage
 
-### Configuration
-
-Utter can also use different sinks other than the FIFO queue:
-
-```ruby
-# in an initializer
-
-require "utter"
-require "utter-sinks-kinesis"
-
-Utter.configure do |c|
-  c.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
-end
-
-# or
-
-Utter.configuration.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
-```
-
 ### Sending Events
 
 ```ruby
@@ -83,6 +64,25 @@ end
 ```
 
 Take note however that doing both an `include` and an `extend` may be a sign that your class is doing too much, and may benefit from a refactoring and separation of concerns.
+
+### Configuration
+
+Utter can also use different sinks other than the FIFO queue:
+
+```ruby
+# in an initializer
+
+require "utter"
+require "utter-sinks-kinesis"
+
+Utter.configure do |c|
+  c.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
+end
+
+# or
+
+Utter.configuration.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
+```
 
 ## Development
 
