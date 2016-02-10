@@ -18,6 +18,21 @@ Or install it yourself as:
 
 ## Usage
 
+### Configuration
+
+Utter can also use different sinks other than the FIFO queue:
+
+```ruby
+require "utter"
+require "utter-sinks-kinesis"
+
+Utter.configure do |c|
+  c.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
+end
+```
+
+### Sending Events
+
 ```ruby
 require "utter"
 
