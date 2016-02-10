@@ -26,6 +26,7 @@ require "utter"
 # mixin instance methods
 class UserRegistration
   include Utter
+
   def register_user(user)
     # code goes here
     # ...

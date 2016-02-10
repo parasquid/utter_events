@@ -32,4 +32,9 @@ describe Utter do
     Given(:instance) { Object.new.extend(Utter) }
     Then { expect { instance.utter(:event, payload: {}) }.to_not raise_error }
   end
+
+  describe "including utter makes the object an observable" do
+    Given(:instance) { Object.new.extend(Utter) }
+    Then { instance.respond_to?(:notify_observers) == true }
+  end
 end
