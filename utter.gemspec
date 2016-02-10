@@ -35,4 +35,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "rspec-given"
+
+  spec.add_runtime_dependency 'gem_config', "0.3.1"
 end

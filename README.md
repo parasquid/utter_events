@@ -23,12 +23,18 @@ Or install it yourself as:
 Utter can also use different sinks other than the FIFO queue:
 
 ```ruby
+# in an initializer
+
 require "utter"
 require "utter-sinks-kinesis"
 
 Utter.configure do |c|
   c.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
 end
+
+# or
+
+Utter.configuration.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
 ```
 
 ### Sending Events
