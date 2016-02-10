@@ -1,6 +1,6 @@
 require "utter/version"
 
 module Utter
-  def utter(channel)
+  def utter(channel, payload=nil)
   end
 end
