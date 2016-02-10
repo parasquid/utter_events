@@ -47,11 +47,20 @@ describe Utter do
         Then { expect {instance.on(:event) }.to_not raise_error }
       end
 
+      Given(:payload) { {name: "parasquid", greeting: "hello"} }
+
       context "block runs when event is triggered" do
-        Given(:payload) { {name: "parasquid", greeting: "hello"} }
         Given(:verifier) { double("Verifier") }
         Given { expect(verifier).to receive(:call) }
+        When { instance.utter(:event, payload: payload) }
         Then { expect { instance.on(:event) {|p| verifier.call(p)} }.to_not raise_error }
+      end
+
+      context "block does not run when the a different event is triggered" do
+        Given(:wrong_verifier) { double("WrongVerifier") }
+        Given { expect(wrong_verifier).not_to receive(:call) }
+        When { instance.utter(:correct_event, payload: payload) }
+        Then { expect { instance.on(:wrong_event) {|p| wrong_verifier.call(p)} }.to_not raise_error }
       end
     end
 
