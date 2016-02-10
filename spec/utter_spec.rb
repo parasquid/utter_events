@@ -32,6 +32,7 @@ describe Utter do
     Given(:instance) { Object.new.extend(Utter) }
 
     describe "#utter" do
+      Then { expect { instance.utter(:event) }.to_not raise_error }
       Then { expect { instance.utter(:event, payload: {}) }.to_not raise_error }
     end
 
