@@ -65,9 +65,35 @@ end
 
 Take note however that doing both an `include` and an `extend` may be a sign that your class is doing too much, and may benefit from a refactoring and separation of concerns.
 
+### Consuming Events
+
+`Utter` has a default FIFO queue where it stores events emitted by the calling objects. This FIFO queue also mixes in the `Observable` module from the Ruby Standard Library so you can do something like:
+
+```ruby
+FIFO_QUEUE = Utter::Sinks::FifoQueue.new
+Utter.configuration.sinks = [FIFO_QUEUE]
+
+class Watcher
+  def update(event, payload)
+    # the FIFO queue will call `#update` whenever there's an event that is emitted
+    # ...
+  end
+end
+
+FIFO_QUEUE.add_observer(Watcher.new)
+```
+
+There's also an experimental syntax that's inspired by https://github.com/shokai/event_emitter and NodeJS:
+
+```ruby
+FIFO_QUEUE.on :user_registered do |payload|
+  puts "#{data[:username]} was registered on #{data[:registration_date]}"
+end
+```
+
 ### Configuration
 
-Utter can also use different sinks other than the FIFO queue:
+Utter can also use different sinks other than the default FIFO queue:
 
 ```ruby
 # in an initializer
@@ -75,13 +101,16 @@ Utter can also use different sinks other than the FIFO queue:
 require "utter"
 require "utter-sinks-kinesis"
 
+FIFO_QUEUE = Utter::Sinks::FifoQueue.new
+KINESIS = Utter::Sinks::Kinesis.new
+
 Utter.configure do |c|
-  c.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
+  c.sinks = [FIFO_QUEUE, KINESIS]
 end
 
 # or
 
-Utter.configuration.sinks = [Utter::Sinks::Fifo, Utter::Sinks::Kinesis]
+Utter.configuration.sinks = [FIFO_QUEUE, KINESIS]
 ```
 
 ## Development
