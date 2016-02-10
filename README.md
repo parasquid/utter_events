@@ -70,8 +70,8 @@ Take note however that doing both an `include` and an `extend` may be a sign tha
 `Utter` has a default FIFO queue where it stores events emitted by the calling objects. This FIFO queue also mixes in the `Observable` module from the Ruby Standard Library so you can do something like:
 
 ```ruby
-FIFO_QUEUE = Utter::Sinks::FifoQueue.new
-Utter.configuration.sinks = [FIFO_QUEUE]
+FIFO_QUEUE = Utter::Sinks::FifoQueue.new # create a custom fifo queue object
+Utter.configuration.sinks = [FIFO_QUEUE] # use this custom object instead of the default one
 
 class Watcher
   def update(event, payload)
@@ -83,13 +83,21 @@ end
 FIFO_QUEUE.add_observer(Watcher.new)
 ```
 
-There's also an experimental syntax that's inspired by https://github.com/shokai/event_emitter and NodeJS:
+If you don't want to observe the FIFO queue, there's also an experimental syntax that's inspired by https://github.com/shokai/event_emitter and NodeJS. You don't need to further configure `Utter` to include the FIFO queue because it already implements it by default.
 
 ```ruby
-FIFO_QUEUE.on :user_registered do |payload|
+user_registration = UserRegistration.new # see above for the class definition
+
+# ... call the method that emits an event
+user_registration.register_user(user)
+
+# ... somewhere else
+user.on :user_registered do |payload|
   puts "#{data[:username]} was registered on #{data[:registration_date]}"
 end
 ```
+
+Note that this doesn't work on events that are called from class methods; you will need to configure and observe your own custom FIFO queue object in those cases.
 
 ### Configuration
 
