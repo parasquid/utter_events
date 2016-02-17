@@ -18,6 +18,10 @@ module Utter
   private
 
   def utter_events
-    @utter_events ||= Hash.new { |hash, key| hash[key] = [] }
+    @utter_events ||= events_table
+  end
+
+  def events_table
+    Hash.new { |hash, key| hash[key] = [] }
   end
 end
