@@ -5,21 +5,19 @@ module Utter
   include Observable
 
   def utter(event, payload=nil)
-    utter_events.push(event)
+    events = utter_events[event.to_sym]
+    events.each do |block|
+      block.call
+    end
   end
 
-  def on(event)
-    events = utter_events.select { |e| e == event }
-    events.each do |e|
-      if block_given?
-        yield
-      end
-    end
+  def on(event, &block)
+    utter_events[event.to_sym].push block
   end
 
   private
 
   def utter_events
-    @utter_events ||= []
+    @utter_events ||= Hash.new { |hash, key| hash[key] = [] }
   end
 end
