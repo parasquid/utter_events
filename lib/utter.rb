@@ -17,6 +17,7 @@ module Utter
     end
 
     def process_event(object_id, event, payload)
+      @backing_hash[object_id][event].compact!
       @backing_hash[object_id][event].each do |block|
         block.call(payload)
       end
