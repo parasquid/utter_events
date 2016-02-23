@@ -19,6 +19,7 @@ module Utter
     def process_event(object_id, event, payload)
       @backing_hash.fetch(object_id)[event].each do |block|
         block.call(payload) if block
+        notify_observers(object_id, event, payload)
       end
     end
   end
