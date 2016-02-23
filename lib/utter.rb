@@ -3,6 +3,10 @@ require "observer"
 
 class EventsTable
   extend Forwardable
+  def_delegators :@backing_hash,
+    :push,
+    :each,
+    :[]
 
   def initialize
     @backing_hash = Hash.new { |hash, key|
@@ -10,18 +14,6 @@ class EventsTable
         h[k] = []
       }
     }
-  end
-
-  def push(*args)
-    @backing_hash.push(args)
-  end
-
-  def each(&block)
-    @backing_hash.each.call(block)
-  end
-
-  def [](*args)
-    @backing_hash[args]
   end
 end
 
