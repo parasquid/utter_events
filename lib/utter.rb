@@ -18,10 +18,10 @@ module Utter
 
     def process_event(object_id, event, payload)
       @backing_hash[object_id][event].each do |block|
-        block.call(payload) if block
-        changed
-        notify_observers(object_id, event, payload)
+        block.call(payload)
       end
+      changed
+      notify_observers(object_id, event, payload)
     end
   end
   private_constant :EventsTable
