@@ -26,6 +26,7 @@ describe Utter do
       Given(:klass) { TestClass }
       Then { expect { klass.test_utter }.to_not raise_error }
     end
+
   end
 
   describe "mixed in with an instance" do
@@ -63,12 +64,29 @@ describe Utter do
           }.to_not raise_error }
       end
 
-      context "block is able to access the payload", focus: true do
+      context "block is able to access the payload" do
         Given(:verifier) { double("Verifier") }
         Given { expect(verifier).to receive(:call).with(payload: payload) }
         When { instance.on(:event) {|p| verifier.call(p)} }
         Then { expect {
             instance.utter(:event, payload: payload)
+          }.to_not raise_error }
+      end
+
+      context "two objects with the same event name are separately processed" do
+        Given(:verifier) { double("Verifier") }
+        Given { expect(verifier).to receive(:call).with(payload: payload) }
+        Given(:instance2) { Object.new.extend(Utter) }
+        Given(:payload2) { {name: "parasquid", greeting: "hi"} }
+        Given(:verifier2) { double("Verifier2") }
+        Given { expect(verifier2).to receive(:call).with(payload: payload2) }
+        When { instance.on(:event) {|p| verifier.call(p)} }
+        When { instance2.on(:event) {|p| verifier2.call(p)} }
+        Then { expect {
+            instance.utter(:event, payload: payload)
+          }.to_not raise_error }
+        And { expect {
+            instance2.utter(:event, payload: payload2)
           }.to_not raise_error }
       end
     end

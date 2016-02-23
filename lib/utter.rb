@@ -2,6 +2,10 @@ require "utter/version"
 require "observer"
 
 module Utter
+  module Sinks
+    EVENTS_TABLE = Hash.new { |hash, key| hash[key] = [] }
+  end
+
   def utter(event, payload=nil)
     events[event.to_sym].each do |block|
       block.call(payload)
@@ -13,12 +17,12 @@ module Utter
   end
 
   def events
-    @events ||= events_table
+    @events ||= local_events_table
   end
 
   private
 
-  def events_table
+  def local_events_table
     Hash.new { |hash, key| hash[key] = [] }
   end
 end
