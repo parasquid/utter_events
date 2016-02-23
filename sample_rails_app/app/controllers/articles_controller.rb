@@ -1,5 +1,7 @@
 class ArticlesController < ApplicationController
+  include Utter
   def index
+    utter(:index_viewed, params: params)
     @articles = Article.all
   end
 
