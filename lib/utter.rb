@@ -1,4 +1,5 @@
 require "utter/version"
+require "utter/exceptions/exceptions"
 require "observer"
 
 module Utter
@@ -17,10 +18,14 @@ module Utter
     end
 
     def process_event(object_id, event, payload)
-      @backing_hash.fetch(object_id)[event].each do |block|
-        block.call(payload) if block
-        changed
-        notify_observers(object_id, event, payload)
+      begin
+        @backing_hash.fetch(object_id)[event].each do |block|
+          block.call(payload) if block
+          changed
+          notify_observers(object_id, event, payload)
+        end
+      rescue KeyError
+        raise Utter::Exceptions::EventHandlerNotRegisteredError
       end
     end
   end

@@ -94,6 +94,13 @@ describe Utter do
       end
     end
 
+    context "throws an exception if there is no registered event handler", focus: true do
+      Given(:instance) { Object.new.extend(Utter) }
+      Then { expect {
+          instance.utter(:event)
+        }.to raise_error(Utter::Exceptions::EventHandlerNotRegisteredError) }
+    end
+
   end
 
   describe Utter::GLOBAL_EVENTS_TABLE do
