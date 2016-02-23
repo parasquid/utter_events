@@ -68,23 +68,21 @@ Take note however that doing both an `include` and an `extend` may be a sign tha
 
 ### Consuming Events
 
-`Utter` has a default FIFO queue where it stores events emitted by the calling objects. This FIFO queue also mixes in the `Observable` module from the Ruby Standard Library so you can do something like:
+`Utter` has a default Global Events Table where it stores events emitted by the calling objects. This events table also mixes in the `Observable` module from the Ruby Standard Library so you can do something like:
 
 ```ruby
-FIFO_QUEUE = Utter::Sinks::FifoQueue.new # create a custom fifo queue object
-Utter.configuration.sinks = [FIFO_QUEUE] # use this custom object instead of the default one
-
 class Watcher
-  def update(event, payload)
-    # the FIFO queue will call `#update` whenever there's an event that is emitted
+  def update(object_id, event, payload)
+    # the events table will call `#update` whenever there's an event that is emitted
     # ...
+    send_to_amazon_kinesis(event, payload.merge(meta: {object_id: object_id, sent_at: Time.now}))
   end
 end
 
-FIFO_QUEUE.add_observer(Watcher.new)
+Utter::GLOBAL_EVENTS_TABLE.add_observer(watcher)
 ```
 
-If you don't want to observe the FIFO queue, there's also an experimental syntax that's inspired by https://github.com/shokai/event_emitter and NodeJS. You don't need to further configure `Utter` to include the FIFO queue because it already implements it by default.
+If you don't want to observe the events table, there's also an experimental syntax that's inspired by https://github.com/shokai/event_emitter and NodeJS.
 
 ```ruby
 user_registration = UserRegistration.new # see above for the class definition
@@ -98,29 +96,7 @@ user.on :user_registered do |payload|
 end
 ```
 
-Note that this doesn't work on events that are called from class methods; you will need to configure and observe your own custom FIFO queue object in those cases.
-
-### Configuration
-
-Utter can also use different sinks other than the default FIFO queue:
-
-```ruby
-# in an initializer
-
-require "utter"
-require "utter-sinks-kinesis"
-
-FIFO_QUEUE = Utter::Sinks::FifoQueue.new
-KINESIS = Utter::Sinks::Kinesis.new
-
-Utter.configure do |c|
-  c.sinks = [FIFO_QUEUE, KINESIS]
-end
-
-# or
-
-Utter.configuration.sinks = [FIFO_QUEUE, KINESIS]
-```
+Note that this doesn't work on events that are called from class methods; you will need to observe the Global Events Table object in those cases.
 
 ## Development
 
