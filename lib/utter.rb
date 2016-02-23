@@ -1,26 +1,25 @@
 require "utter/version"
 require "observer"
 
-class EventsTable
-  extend Forwardable
-  def_delegators :@backing_hash,
-    :push,
-    :each,
-    :[]
-
-  def initialize
-    @backing_hash = Hash.new { |hash, key|
-      hash[key] = Hash.new { |h, k|
-        h[k] = []
-      }
-    }
-  end
-end
-
 module Utter
-  module Sinks
-    GLOBAL_EVENTS_TABLE = EventsTable.new
+  class EventsTable
+    extend Forwardable
+    def_delegators :@backing_hash,
+      :push,
+      :each,
+      :[]
+
+    def initialize
+      @backing_hash = Hash.new { |hash, key|
+        hash[key] = Hash.new { |h, k|
+          h[k] = []
+        }
+      }
+    end
   end
+  private_constant :EventsTable
+
+  GLOBAL_EVENTS_TABLE = EventsTable.new
 
   def utter(event, payload=nil)
     events[self][event.to_sym].each do |block|
@@ -35,6 +34,8 @@ module Utter
   private
 
   def events
-    Sinks::GLOBAL_EVENTS_TABLE
+    GLOBAL_EVENTS_TABLE
   end
+
+
 end
