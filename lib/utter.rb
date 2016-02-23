@@ -4,10 +4,9 @@ require "observer"
 module Utter
   class EventsTable
     extend Forwardable
-    def_delegators :@backing_hash,
-      :push,
-      :each,
-      :[]
+    def_delegators :@backing_hash, :[], :fetch
+
+    include Observable
 
     def initialize
       @backing_hash = Hash.new { |hash, key|
@@ -22,13 +21,13 @@ module Utter
   GLOBAL_EVENTS_TABLE = EventsTable.new
 
   def utter(event, payload=nil)
-    events[self][event.to_sym].each do |block|
-      block.call(payload)
+    events.fetch(self.object_id)[event.to_sym].each do |block|
+      block.call(payload) if block
     end
   end
 
   def on(event, &block)
-    events[self][event.to_sym].push block
+    events[self.object_id][event.to_sym].push block
   end
 
   private

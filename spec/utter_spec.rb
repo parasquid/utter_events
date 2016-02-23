@@ -13,6 +13,7 @@ describe Utter do
         end
       end
       Given(:instance) { TestClass.new }
+      Given { instance.on(:event) }
       Then { expect { instance.test_utter }.to_not raise_error }
     end
 
@@ -24,6 +25,7 @@ describe Utter do
         end
       end
       Given(:klass) { TestClass }
+      Given { klass.on(:event) }
       Then { expect { klass.test_utter }.to_not raise_error }
     end
 
@@ -33,6 +35,7 @@ describe Utter do
     Given(:instance) { Object.new.extend(Utter) }
 
     describe "#utter" do
+      When { instance.on(:event) }
       Then { expect { instance.utter(:event) }.to_not raise_error }
       Then { expect { instance.utter(:event, payload: {}) }.to_not raise_error }
     end
