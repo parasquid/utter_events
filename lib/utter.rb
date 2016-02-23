@@ -1,11 +1,10 @@
 require "utter/version"
-require "utter/exceptions/exceptions"
 require "observer"
 
 module Utter
   class EventsTable
     extend Forwardable
-    def_delegators :@backing_hash, :[], :fetch
+    def_delegators :@backing_hash, :[]
 
     include Observable
 
@@ -18,16 +17,10 @@ module Utter
     end
 
     def process_event(object_id, event, payload)
-      begin
-        @backing_hash.fetch(object_id)[event].each do |block|
-          block.call(payload) if block
-          changed
-          notify_observers(object_id, event, payload)
-        end
-      rescue KeyError
-        unless payload && payload.respond_to?(:[]) && payload[:possibly_unhandled]
-          raise Utter::Exceptions::EventHandlerNotRegisteredError
-        end
+      @backing_hash[object_id][event].each do |block|
+        block.call(payload) if block
+        changed
+        notify_observers(object_id, event, payload)
       end
     end
   end
