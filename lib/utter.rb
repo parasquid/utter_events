@@ -4,7 +4,7 @@ require "observer"
 module Utter
   def utter(event, payload=nil)
     events[event.to_sym].each do |block|
-      block.call
+      block.call(payload)
     end
   end
 

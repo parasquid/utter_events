@@ -62,6 +62,15 @@ describe Utter do
             instance.utter(:correct_event, payload: payload)
           }.to_not raise_error }
       end
+
+      context "block is able to access the payload", focus: true do
+        Given(:verifier) { double("Verifier") }
+        Given { expect(verifier).to receive(:call).with(payload: payload) }
+        When { instance.on(:event) {|p| verifier.call(p)} }
+        Then { expect {
+            instance.utter(:event, payload: payload)
+          }.to_not raise_error }
+      end
     end
 
   end
