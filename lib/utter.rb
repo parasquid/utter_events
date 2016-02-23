@@ -25,7 +25,9 @@ module Utter
           notify_observers(object_id, event, payload)
         end
       rescue KeyError
-        raise Utter::Exceptions::EventHandlerNotRegisteredError
+        unless payload && payload.respond_to?(:[]) && payload[:possibly_unhandled]
+          raise Utter::Exceptions::EventHandlerNotRegisteredError
+        end
       end
     end
   end

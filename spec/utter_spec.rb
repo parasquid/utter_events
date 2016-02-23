@@ -94,13 +94,19 @@ describe Utter do
       end
     end
 
-    context "throws an exception if there is no registered event handler", focus: true do
+    context "throws an exception if there is no registered event handler" do
       Given(:instance) { Object.new.extend(Utter) }
       Then { expect {
           instance.utter(:event)
         }.to raise_error(Utter::Exceptions::EventHandlerNotRegisteredError) }
     end
 
+    context "fails silently if the argument 'possibly_unhandled' is true" do
+      Given(:instance) { Object.new.extend(Utter) }
+      Then { expect {
+          instance.utter(:event, possibly_unhandled: true)
+        }.to_not raise_error }
+    end
   end
 
   describe Utter::GLOBAL_EVENTS_TABLE do
