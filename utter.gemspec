@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'utter/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "utter"
+  spec.name          = "utter_events"
   spec.version       = Utter::VERSION
   spec.authors       = ["parasquid"]
   spec.email         = ["parasquid@gmail.com"]
