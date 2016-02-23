@@ -2,8 +2,6 @@ require "utter/version"
 require "observer"
 
 module Utter
-  include Observable
-
   def utter(event, payload=nil)
     events[event.to_sym].each do |block|
       block.call

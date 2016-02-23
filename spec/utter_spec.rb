@@ -36,10 +36,6 @@ describe Utter do
       Then { expect { instance.utter(:event, payload: {}) }.to_not raise_error }
     end
 
-    describe "including utter makes the object an observable" do
-      Then { instance.respond_to?(:notify_observers) == true }
-    end
-
     describe "#on" do
       Then { instance.respond_to?(:on) == true }
 
