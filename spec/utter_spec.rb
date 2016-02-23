@@ -95,4 +95,18 @@ describe Utter do
     end
 
   end
+
+  describe Utter::GLOBAL_EVENTS_TABLE do
+    context "the global events table can be observed" do
+      Given(:instance) { Object.new.extend(Utter) }
+      Given(:watcher) { double("Watcher") }
+      Given { expect(watcher).to receive(:update) }
+      When { Utter::GLOBAL_EVENTS_TABLE.add_observer(watcher) }
+      When { instance.on(:event) }
+      Then { expect {
+          instance.utter(:event)
+        }.to_not raise_error }
+
+    end
+  end
 end
