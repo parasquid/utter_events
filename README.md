@@ -98,6 +98,23 @@ end
 
 Note that this doesn't work on events that are called from class methods; you will need to observe the Global Events Table object in those cases.
 
+## Examples
+
+There is an example [Rails App](https://github.com/parasquid/utter/tree/master/sample_rails_app) that uses `Utter`
+
+    $ # after checking out this repository
+    $ cd sample_rails_app
+    $ bundle install
+    $ rails s
+
+Then go to localhost:3000/articles and take a look at the console. You should see something like this:
+
+```ruby
+object_id: 70100155242700
+event: index_viewed
+payload: {:params=>{"controller"=>"articles", "action"=>"index"}}
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
