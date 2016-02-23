@@ -15,15 +15,19 @@ module Utter
         }
       }
     end
+
+    def process_event(object_id, event, payload)
+      @backing_hash.fetch(object_id)[event].each do |block|
+        block.call(payload) if block
+      end
+    end
   end
   private_constant :EventsTable
 
   GLOBAL_EVENTS_TABLE = EventsTable.new
 
   def utter(event, payload=nil)
-    events.fetch(self.object_id)[event.to_sym].each do |block|
-      block.call(payload) if block
-    end
+    events.process_event(self.object_id, event.to_sym, payload)
   end
 
   def on(event, &block)
