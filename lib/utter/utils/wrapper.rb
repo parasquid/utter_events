@@ -1,8 +1,12 @@
 module Utter
   module Utils
     class Wrapper
-      def wrap(wrapped_class, after: nil)
+      def wrap(wrapped_class, before: nil, after: nil)
         wrapped_class.class_eval do
+          self.define_singleton_method :utter_before_action do
+            before || Proc.new {}
+          end
+
           self.define_singleton_method :utter_after_action do
             after || Proc.new {}
           end
@@ -19,12 +23,11 @@ module Utter
 
               # wrap the method call
               define_method(name) do |*args, &block|
-                # before action
+                self.class.superclass.utter_before_action.call
 
                 # call the original method
                 result = send original, *args, &block
 
-                # after action
                 self.class.superclass.utter_after_action.call
 
                 # return the original return value
