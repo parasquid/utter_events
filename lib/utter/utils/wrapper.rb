@@ -3,7 +3,10 @@ module Utter
     class Wrapper
       def wrap(wrapped_class, after: nil)
         wrapped_class.class_eval do
-          @@after_action = after
+          self.define_singleton_method :utter_after_action do
+            after || Proc.new {}
+          end
+
           def self.inherited(klass)
             def klass.method_added(name)
               # prevent a SystemStackError
@@ -22,7 +25,7 @@ module Utter
                 result = send original, *args, &block
 
                 # after action
-                @@after_action.call if !!@@after_action
+                self.class.superclass.utter_after_action.call
 
                 # return the original return value
                 result
