@@ -23,12 +23,12 @@ module Utter
 
               # wrap the method call
               define_method(name) do |*args, &block|
-                self.class.superclass.utter_before_action.call(self)
+                self.class.superclass.utter_before_action.call(self, args, name)
 
                 # call the original method
                 result = send original, *args, &block
 
-                self.class.superclass.utter_after_action.call(self)
+                self.class.superclass.utter_after_action.call(self, args, name)
 
                 # return the original return value
                 result

@@ -14,7 +14,8 @@ describe Utter do
       end
       Given(:instance) { TestClass.new }
       Given { instance.on(:event) }
-      Then { expect { instance.test_utter }.to_not raise_error }
+      Then { "the utter method is mixed in" }
+      And { expect { instance.test_utter }.to_not raise_error }
     end
 
     context "mixin with class" do
@@ -26,7 +27,8 @@ describe Utter do
       end
       Given(:klass) { TestClass }
       Given { klass.on(:event) }
-      Then { expect { klass.test_utter }.to_not raise_error }
+      Then { "the utter method is mixed in" }
+      And { expect { klass.test_utter }.to_not raise_error }
     end
 
   end

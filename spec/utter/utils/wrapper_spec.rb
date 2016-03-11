@@ -42,7 +42,17 @@ describe Utter::Utils::Wrapper do
 
       When { child_class.new.send(random_method) }
 
-      Then { "context is the same as original calling object"; true }
+      Then { "context is the same as original calling object" }
+    end
+
+    context "makes the original calling name available" do
+      Given(:before_action) { Proc.new { |context, args, name| expect(name).to eq(random_method) } }
+      Given(:after_action) { Proc.new { |context, args, name| expect(name).to eq(random_method) } }
+      Given { Utter::Utils::Wrapper.new.wrap(klass, before: before_action, after: after_action) }
+
+      When { child_class.new.send(random_method) }
+
+      Then { "the name of the method is made available" }
     end
   end
 end

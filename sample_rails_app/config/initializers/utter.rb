@@ -48,13 +48,12 @@ end
 require "utter/utils/wrapper"
 
 [ApplicationController].each do |klass|
-  after_action = Proc.new do |context|
+  after_action = Proc.new do |context, args, name|
     payload = {
-      "object_instance" => self.to_s,
-      # "result" => result.inspect,
-      "action_dispatch.request.path_parameters" => context["action_dispatch.request.path_parameters"]
+      "object_instance" => context.to_s,
+      "action_dispatch.request.path_parameters" => context.env["action_dispatch.request.path_parameters"]
     }
-    utter("#{context.class.to_s}##{name}", payload) if context.respond_to?(:utter)
+    context.utter("#{context.class.to_s}##{name}", payload) if context.respond_to?(:utter)
     puts "#{context.class.to_s}##{name}"
     puts payload
  end
