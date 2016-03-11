@@ -34,5 +34,15 @@ describe Utter::Utils::Wrapper do
 
       Then { expect(before_action).to have_received(:call) }
     end
+
+    context "makes the original calling context available" do
+      Given(:before_action) { Proc.new { |context| expect(context.class).to eq(child_class) } }
+      Given(:after_action) { Proc.new { |context| expect(context.class).to eq(child_class) } }
+      Given { Utter::Utils::Wrapper.new.wrap(klass, before: before_action, after: after_action) }
+
+      When { child_class.new.send(random_method) }
+
+      Then { "context is the same as original calling object"; true }
+    end
   end
 end
