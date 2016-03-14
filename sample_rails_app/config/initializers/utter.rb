@@ -64,8 +64,6 @@ require "utter/utils/wrapper"
       "action_dispatch.request.path_parameters" => context.env["action_dispatch.request.path_parameters"]
     }
     context.utter("#{context.class.to_s}##{name}", payload) if context.respond_to?(:utter)
-    puts "#{context.class.to_s}##{name}"
-    puts payload
   end
   Utter::Utils::Wrapper.new.wrap(klass, after: after_action )
 end
