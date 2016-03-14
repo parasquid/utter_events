@@ -66,7 +66,7 @@ require "utter/utils/wrapper"
     context.utter("#{context.class.to_s}##{name}", payload) if context.respond_to?(:utter)
     puts "#{context.class.to_s}##{name}"
     puts payload
- end
+  end
   Utter::Utils::Wrapper.new.wrap(klass, after: after_action )
 end
 
