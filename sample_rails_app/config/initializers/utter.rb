@@ -14,6 +14,10 @@ class UtterKinesisLogger
   end
 
   def update(object_id, event, payload)
+    self.async._update(object_id, event, payload)
+  end
+
+  def _update(object_id, event, payload)
     @client.put_record(
       delivery_stream_name: "checkout",
       record: {
@@ -24,6 +28,8 @@ class UtterKinesisLogger
 end
 
 class UtterDynamoLogger
+  include Celluloid
+
   def initialize
     credentials = Aws::SharedCredentials.new(profile_name: "dynamodb")
     @client = Aws::DynamoDB::Client.new(
@@ -33,6 +39,10 @@ class UtterDynamoLogger
   end
 
   def update(object_id, event, payload)
+    self.async._update(object_id, event, payload)
+  end
+
+  def _update(object_id, event, payload)
     @client.put_item({
       table_name: "mv_utter_events",
       item: {
@@ -65,7 +75,7 @@ end
 
 console_watcher = UtterConsoleLogger.new
 dynamo_watcher = UtterDynamoLogger.new
-kinesis_watcher = UtterKinesisLogger.new
+# kinesis_watcher = UtterKinesisLogger.new
 Utter::GLOBAL_EVENTS_TABLE.add_observer(console_watcher)
 Utter::GLOBAL_EVENTS_TABLE.add_observer(dynamo_watcher)
-Utter::GLOBAL_EVENTS_TABLE.add_observer(kinesis_watcher)
+# Utter::GLOBAL_EVENTS_TABLE.add_observer(kinesis_watcher)
