@@ -97,7 +97,7 @@ describe Utter do
     end
   end
 
-  describe Utter::GLOBAL_EVENTS_TABLE do
+  describe "Utter::GLOBAL_EVENTS_TABLE" do
     context "the global events table can be observed" do
       Given(:instance) { Object.new.extend(Utter) }
       Given(:watcher) { double("Watcher") }
