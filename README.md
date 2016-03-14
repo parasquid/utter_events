@@ -114,6 +114,9 @@ object_id: 70100155242700
 event: index_viewed
 payload: {:params=>{"controller"=>"articles", "action"=>"index"}}
 ```
+You will need to [setup your AWS credentials](https://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs) if you wish to be able to use the AWS related examples.
+
+The `UtterDynamoLogger` watcher utilizes [Celluloid](https://github.com/celluloid/celluloid/wiki/Basic-usage) in order to not block the original method call.
 
 ## Development
 

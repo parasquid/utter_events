@@ -17,10 +17,16 @@ module Utter
     end
 
     def process_event(object_id, event, payload)
+      return unless @backing_hash.has_key? object_id
+      return unless @backing_hash[object_id].has_key? event
+
+      # call registered event handlers
       @backing_hash[object_id][event].compact!
       @backing_hash[object_id][event].each do |block|
         block.call(payload)
       end
+
+      # notify watchers
       changed
       notify_observers(object_id, event, payload)
     end
