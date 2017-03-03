@@ -90,7 +90,8 @@ user_registration = UserRegistration.new # see above for the class definition
 user = Struct.new(:name, :created_at).new("parasquid", Time.now)
 
 # ... somewhere else
-user_registration.on :user_registered do |payload|
+user_registration.on :user_registered do |data|
+  payload = data[:payload]
   puts "#{payload[:username]} was registered on #{payload[:registration_date]}"
 end
 
