@@ -91,7 +91,7 @@ user = Struct.new(:name, :created_at).new("parasquid", Time.now)
 
 # ... somewhere else
 user_registration.on :user_registered do |payload|
-  puts "#{payload[:name]} was registered on #{payload[:created_at]}"
+  puts "#{payload[:username]} was registered on #{payload[:registration_date]}"
 end
 
 # ... call the method that emits an event
