@@ -5,7 +5,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'utter'
+gem 'utter_events'
 ```
 
 And then execute:
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install utter
+    $ gem install utter_events
 
 ## Usage
 
@@ -87,13 +87,16 @@ If you don't want to observe the events table, there's also an experimental synt
 ```ruby
 user_registration = UserRegistration.new # see above for the class definition
 
+user = Struct.new(:name, :created_at).new("parasquid", Time.now)
+
+# ... somewhere else
+user_registration.on :user_registered do |payload|
+  puts "#{payload[:name]} was registered on #{payload[:created_at]}"
+end
+
 # ... call the method that emits an event
 user_registration.register_user(user)
 
-# ... somewhere else
-user.on :user_registered do |payload|
-  puts "#{data[:username]} was registered on #{data[:registration_date]}"
-end
 ```
 
 Note that this doesn't work on events that are called from class methods; you will need to observe the Global Events Table object in those cases.
